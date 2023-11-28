@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Aktenschrank.Model
+﻿namespace Aktenschrank.Model
 {
     public class Rule
     {
@@ -24,7 +22,6 @@ namespace Aktenschrank.Model
 
             _ruleData = new Dictionary<string, string>();
         }
-
 
         public string Title { get { return _title; } }
         public string Description { get { return _description; } }
