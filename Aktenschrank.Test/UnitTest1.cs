@@ -1,7 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-
-namespace Aktenschrank_Tests
+namespace Aktenschrank.test
 {
     [TestClass]
     public class UnitTest1
@@ -9,6 +6,7 @@ namespace Aktenschrank_Tests
         [TestMethod]
         public void TestMethod1()
         {
+
         }
     }
 }
