@@ -8,9 +8,9 @@ namespace Aktenschrank.Desktop.ViewModel;
 
 public class MainWindowViewModel : INotifyPropertyChanged
 {
-    private string _tbNewSortingUnitName;
+    private string _tbNewSortingProfileName;
 
-    private ObservableSet<SortingUnit> _sortingUnits = new();
+    private ObservableSet<SortingProfile> _sortingProfiles = new();
 
 
     private void KeyPress_DeleteItem(ListBox listBox, KeyEventArgs e)
@@ -21,17 +21,17 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
-    private void LbSortingUnits_KeyDuplicate(ListBox lbSortingUnits, KeyEventArgs e)
+    private void LbSortingProfiles_KeyDuplicate(ListBox lbSortingProfiles, KeyEventArgs e)
     {
-        if (lbSortingUnits.SelectedItem is SortingUnit sortingUnit && lbSortingUnits.SelectedItems is ObservableSet<SortingUnit> setSortingUnits)
+        if (lbSortingProfiles.SelectedItem is SortingProfile sortingProfile && lbSortingProfiles.SelectedItems is ObservableSet<SortingProfile> setSortingProfiles)
         {
-            string origName = sortingUnit.Name;
+            string origName = sortingProfile.Name;
 
             for (int i = 0; i < int.MaxValue; i++)
             {
-                sortingUnit.Name = origName + i;
+                sortingProfile.Name = origName + i;
 
-                if (setSortingUnits.Add(sortingUnit))
+                if (setSortingProfiles.Add(sortingProfile))
                 {
                     break;
                 }
@@ -42,24 +42,24 @@ public class MainWindowViewModel : INotifyPropertyChanged
     }
 
 
-    public string TbNewSortingUnitName
+    public string TbNewSortingProfileName
     {
-        get => _tbNewSortingUnitName;
+        get => _tbNewSortingProfileName;
         set
         {
-            if (value == _tbNewSortingUnitName) return;
-            _tbNewSortingUnitName = value ?? throw new ArgumentNullException(nameof(value));
+            if (value == _tbNewSortingProfileName) return;
+            _tbNewSortingProfileName = value ?? throw new ArgumentNullException(nameof(value));
             OnPropertyChanged();
         }
     }
 
-    public ObservableSet<SortingUnit> SortingUnits
+    public ObservableSet<SortingProfile> SortingProfiles
     {
-        get => _sortingUnits;
+        get => _sortingProfiles;
         set
         {
-            if (Equals(value, _sortingUnits)) return;
-            _sortingUnits = value ?? throw new ArgumentNullException(nameof(value));
+            if (Equals(value, _sortingProfiles)) return;
+            _sortingProfiles = value ?? throw new ArgumentNullException(nameof(value));
             OnPropertyChanged();
         }
     }

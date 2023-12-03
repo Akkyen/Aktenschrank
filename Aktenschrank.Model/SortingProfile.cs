@@ -4,23 +4,23 @@ using System.Runtime.CompilerServices;
 
 namespace Aktenschrank.Model;
 
-public class SortingUnit : INotifyPropertyChanged
+public class SortingProfile : INotifyPropertyChanged, ICloneable
 {
     private string _name = string.Empty;
     private string _description = string.Empty;
 
     private bool _enabled;
-    private bool _runAsService;
+    private bool _autoRun;
 
     private ObservableSet<Behaviour> _behaviours = new();
 
     private ObservableSet<Target> _targets = new();
 
-    public SortingUnit()
+    public SortingProfile()
     {
     }
 
-    public SortingUnit(string name)
+    public SortingProfile(string name)
     {
         Name = name;
     }
@@ -32,7 +32,7 @@ public class SortingUnit : INotifyPropertyChanged
 
     public bool RemoveTarget(string folderPath)
     {
-        Target? toRemove = null;
+        Target toRemove = null!;
 
         foreach (Target target in Targets)
         {
@@ -63,7 +63,7 @@ public class SortingUnit : INotifyPropertyChanged
 
     public bool RemoveBehaviour(string name)
     {
-        Behaviour? toRemove = null;
+        Behaviour toRemove = null!;
 
         foreach (Behaviour behaviour in Behaviours)
         {
@@ -110,13 +110,13 @@ public class SortingUnit : INotifyPropertyChanged
         }
     }
 
-    public bool RunAsService
+    public bool AutoRun
     {
-        get => _runAsService;
+        get => _autoRun;
         set
         {
-            if (value == _runAsService) return;
-            _runAsService = value;
+            if (value == _autoRun) return;
+            _autoRun = value;
             OnPropertyChanged();
         }
     }
@@ -150,20 +150,33 @@ public class SortingUnit : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        OnPropertyChanged(propertyName);
-        return true;
-    }
-
     public override string ToString()
     {
         return Name;
     }
 
-    protected bool Equals(SortingUnit other)
+    public object Clone()
+    {
+        SortingProfile rValue = new SortingProfile(_name + "_Duplicate");
+
+        rValue.Description = _description;
+        rValue.Enabled = _enabled;
+        rValue.AutoRun = _autoRun;
+
+        foreach (Behaviour behaviour in _behaviours)
+        {
+            rValue.Behaviours.Add((Behaviour)behaviour.Clone());
+        }
+
+        foreach (Target target in _targets)
+        {
+            rValue.Targets.Add((Target)target.Clone());
+        }
+
+        return rValue;
+    }
+
+    protected bool Equals(SortingProfile other)
     {
         return _name == other._name;
     }
@@ -173,7 +186,7 @@ public class SortingUnit : INotifyPropertyChanged
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return Equals((SortingUnit)obj);
+        return Equals((SortingProfile)obj);
     }
 
     public override int GetHashCode()

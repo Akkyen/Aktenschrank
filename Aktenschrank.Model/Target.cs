@@ -4,11 +4,12 @@ using System.Xml.Linq;
 
 namespace Aktenschrank.Model;
 
-public class Target : INotifyPropertyChanged
+public class Target : INotifyPropertyChanged, ICloneable
 {
     private string _folderPath = string.Empty;
 
-    private bool recursive;
+    private bool _enabled;
+    private bool _recursive;
 
     public Target(string folderPath)
     {
@@ -18,6 +19,13 @@ public class Target : INotifyPropertyChanged
     public Target(string folderPath, bool recursive)
     {
         FolderPath = folderPath;
+        Recursive = recursive;
+    }
+
+    public Target(string folderPath, bool enabled, bool recursive)
+    {
+        FolderPath = folderPath;
+        Enabled = enabled;
         Recursive = recursive;
     }
 
@@ -33,13 +41,24 @@ public class Target : INotifyPropertyChanged
         }
     }
 
-    public bool Recursive
+    public bool Enabled
     {
-        get => recursive;
+        get => _enabled;
         set
         {
-            if (value == recursive) return;
-            recursive = value;
+            if (value == _enabled) return;
+            _enabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool Recursive
+    {
+        get => _recursive;
+        set
+        {
+            if (value == _recursive) return;
+            _recursive = value;
             OnPropertyChanged();
         }
     }
@@ -63,6 +82,11 @@ public class Target : INotifyPropertyChanged
     public override string ToString()
     {
         return FolderPath;
+    }
+
+    public object Clone()
+    {
+        return new Target(_folderPath, _enabled, _recursive);
     }
 
     protected bool Equals(Target other)

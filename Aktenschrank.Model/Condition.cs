@@ -10,9 +10,6 @@ public class Condition : Statement
 
     private ObservableCollection<Statement> _body = new();
 
-    private Statement? _predecessor;
-    private Statement? _successor;
-
     public ConditionType ConditionType
     {
         get => _conditionType;
@@ -42,28 +39,6 @@ public class Condition : Statement
         {
             if (Equals(value, _body)) return;
             _body = value ?? throw new ArgumentNullException(nameof(value));
-            OnPropertyChanged();
-        }
-    }
-
-    public Statement Predecessor
-    {
-        get => _predecessor;
-        set
-        {
-            if (Equals(value, _predecessor)) return;
-            _predecessor = value ?? throw new ArgumentNullException(nameof(value));
-            OnPropertyChanged();
-        }
-    }
-
-    public Statement Successor
-    {
-        get => _successor;
-        set
-        {
-            if (Equals(value, _successor)) return;
-            _successor = value ?? throw new ArgumentNullException(nameof(value));
             OnPropertyChanged();
         }
     }

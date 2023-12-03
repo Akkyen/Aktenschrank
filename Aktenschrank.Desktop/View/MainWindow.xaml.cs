@@ -13,7 +13,7 @@ namespace Aktenschrank.Desktop.View
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MainWindowViewModel _mainWindowViewModel = new();
+        private readonly MainWindowViewModel _mainWindowViewModel = new();
 
         public MainWindow()
         {
@@ -29,7 +29,7 @@ namespace Aktenschrank.Desktop.View
             e.Handled = !regex.IsMatch(e.Text);
         }
 
-        private void TbNewSortingUnitName_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void TbNewSortingProfileName_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Space)
             {
@@ -37,26 +37,50 @@ namespace Aktenschrank.Desktop.View
             }
             else if (e.Key == Key.Enter)
             {
-                if (TbNewSortingUnitName.Text != "")
+                if (TbNewSortingProfileName.Text != "")
                 {
-                    _mainWindowViewModel.SortingUnits.Add(new SortingUnit(TbNewSortingUnitName.Text));
+                    _mainWindowViewModel.SortingProfiles.Add(new SortingProfile(TbNewSortingProfileName.Text));
                 }
             }
         }
 
-        private void BtCreateSortingUnit_Click(object sender, RoutedEventArgs e)
+        private void BtCreateSortingProfile_Click(object sender, RoutedEventArgs e)
         {
-            if (TbNewSortingUnitName.Text != "")
+            if (TbNewSortingProfileName.Text != "")
             {
-                _mainWindowViewModel.SortingUnits.Add(new SortingUnit(TbNewSortingUnitName.Text));
+                _mainWindowViewModel.SortingProfiles.Add(new SortingProfile(TbNewSortingProfileName.Text));
             }
         }
 
-        private void BtDeleteSortingUnit_Click(object sender, RoutedEventArgs e)
+        private void BtDeleteSortingProfile_Click(object sender, RoutedEventArgs e)
         {
-            if (LbSortingUnits.SelectedItem != null)
+            if (LbSortingProfiles.SelectedItem is SortingProfile sortingProfile)
             {
-                _mainWindowViewModel.SortingUnits.Remove((SortingUnit)LbSortingUnits.SelectedItem);
+                _mainWindowViewModel.SortingProfiles.Remove(sortingProfile);
+            }
+        }
+
+        private void BtDuplicateSortingProfile_Click(object sender, RoutedEventArgs e)
+        {
+            if (LbSortingProfiles.SelectedItem is SortingProfile sortingProfile)
+            {
+                _mainWindowViewModel.SortingProfiles.Add(sortingProfile);
+            }
+        }
+
+        private void LbDeleteSortingProfileCommand(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (LbSortingProfiles.SelectedItem is SortingProfile sortingProfile)
+            {
+                _mainWindowViewModel.SortingProfiles.Remove(sortingProfile);
+            }
+        }
+
+        private void LbDuplicateSortingProfileCommand(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (LbSortingProfiles.SelectedItem is SortingProfile sortingProfile)
+            {
+                _mainWindowViewModel.SortingProfiles.Add((SortingProfile)sortingProfile.Clone());
             }
         }
 
@@ -66,7 +90,7 @@ namespace Aktenschrank.Desktop.View
 
         private void BtCreateTarget_Click(object sender, RoutedEventArgs e)
         {
-            if (LbSortingUnits.SelectedItem is SortingUnit sortingUnit)
+            if (LbSortingProfiles.SelectedItem is SortingProfile sortingProfile)
             {
                 string folderPath = string.Empty;
 
@@ -74,34 +98,32 @@ namespace Aktenschrank.Desktop.View
                 if (openFolderDialog.ShowDialog() == true)
                     folderPath = openFolderDialog.FolderName;
 
-                sortingUnit.Targets.Add(new Target(folderPath));
+                sortingProfile.Targets.Add(new Target(folderPath));
             }
         }
 
         private void BtDeleteTarget_Click(object sender, RoutedEventArgs e)
         {
-            if (LbSortingUnits.SelectedItem is SortingUnit sortingUnit && LbSelectedSortingUnitTargets.SelectedItem is Target target)
+            if (LbSortingProfiles.SelectedItem is SortingProfile sortingProfile && LbSelectedSortingProfileTargets.SelectedItem is Target target)
             {
-                sortingUnit.Targets.Remove(target);
+                sortingProfile.Targets.Remove(target);
             }
         }
 
         private void BtCreateBehaviour_Click(object sender, RoutedEventArgs e)
         {
-            if (LbSortingUnits.SelectedItem is SortingUnit sortingUnit)
+            if (LbSortingProfiles.SelectedItem is SortingProfile sortingProfile)
             {
-                sortingUnit.AddBehaviour();
+                sortingProfile.AddBehaviour();
             }
         }
 
         private void BtDeleteBehaviour_Click(object sender, RoutedEventArgs e)
         {
-            if (LbSortingUnits.SelectedItem is SortingUnit sortingUnit && LbSelectedSortingUnitBehaviours.SelectedItem is Behaviour behaviour)
+            if (LbSortingProfiles.SelectedItem is SortingProfile sortingProfile && LbSelectedSortingProfileBehaviours.SelectedItem is Behaviour behaviour)
             {
-                sortingUnit.RemoveBehaviour(behaviour);
+                sortingProfile.RemoveBehaviour(behaviour);
             }
         }
-
-        
     }
 }

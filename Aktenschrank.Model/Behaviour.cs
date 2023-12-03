@@ -4,28 +4,32 @@ using System.Runtime.CompilerServices;
 
 namespace Aktenschrank.Model
 {
-    public class Behaviour : INotifyPropertyChanged
+    public class Behaviour : INotifyPropertyChanged, ICloneable
     {
         private string _name;
         private string _description;
 
-        private ObservableCollection<Action> _actions;
+        private ObservableCollection<Statement> _statements;
 
-        private bool _runInService;
+        private bool _enabled;
+        private bool _autoRun;
 
         public Behaviour(string name)
         {
             _name = name;
 
-            Actions = new ObservableCollection<Action>();
+            Statements = new ObservableCollection<Statement>();
         }
 
-        public Behaviour(string name, string description)
+        public Behaviour(string name, string description, bool enabled, bool autoRun)
         {
             Name = name;
             Description = description;
 
-            Actions = new ObservableCollection<Action>();
+            Enabled = enabled;
+            AutoRun = autoRun;
+
+            Statements = new ObservableCollection<Statement>();
         }
 
         public string Name
@@ -50,24 +54,35 @@ namespace Aktenschrank.Model
             }
         }
 
-        public ObservableCollection<Action> Actions
+        public ObservableCollection<Statement> Statements
         {
-            get => _actions;
+            get => _statements;
             set
             {
-                if (Equals(value, _actions)) return;
-                _actions = value ?? throw new ArgumentNullException(nameof(value));
+                if (Equals(value, _statements)) return;
+                _statements = value ?? throw new ArgumentNullException(nameof(value));
                 OnPropertyChanged();
             }
         }
 
-        public bool RunInService
+        public bool Enabled
         {
-            get => _runInService;
+            get => _enabled;
             set
             {
-                if (value == _runInService) return;
-                _runInService = value;
+                if (value == _enabled) return;
+                _enabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool AutoRun
+        {
+            get => _autoRun;
+            set
+            {
+                if (value == _autoRun) return;
+                _autoRun = value;
                 OnPropertyChanged();
             }
         }
@@ -90,6 +105,18 @@ namespace Aktenschrank.Model
         public override string ToString()
         {
             return Name;
+        }
+
+        public object Clone()
+        {
+            Behaviour rValue = new Behaviour(_name, _description, _enabled, _autoRun);
+
+            foreach (Statement statement in _statements)
+            {
+                rValue._statements.Add((Statement)statement.Clone());
+            }
+
+            return rValue;
         }
 
         protected bool Equals(Behaviour other)

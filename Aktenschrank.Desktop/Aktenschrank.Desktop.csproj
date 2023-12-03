@@ -20,8 +20,4 @@
     <Resource Include="./Resources/aktenschrank.ico" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ValueConverters\" />
-  </ItemGroup>
-
 </Project>
