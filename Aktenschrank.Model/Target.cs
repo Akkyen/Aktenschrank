@@ -1,10 +1,8 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Xml.Linq;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Aktenschrank.Model;
 
-public class Target : INotifyPropertyChanged, ICloneable
+public class Target : ObservableObject, ICloneable
 {
     private string _folderPath = string.Empty;
 
@@ -61,22 +59,6 @@ public class Target : INotifyPropertyChanged, ICloneable
             _recursive = value;
             OnPropertyChanged();
         }
-    }
-
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        OnPropertyChanged(propertyName);
-        return true;
     }
 
     public override string ToString()

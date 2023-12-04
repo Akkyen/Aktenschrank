@@ -1,31 +1,46 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Input;
 using Aktenschrank.Model;
 
 namespace Aktenschrank.Desktop.View.UserControls
 {
     /// <summary>
-    /// Interaktionslogik für UC_Behaviour.xaml
+    /// Interaktionslogik für UcBehaviour.xaml
     /// </summary>
-    public partial class UC_Behaviour : UserControl, INotifyPropertyChanged
+    public partial class UcBehaviour : UserControl, INotifyPropertyChanged
     {
-        private Behaviour _ucBehaviour;
-        public UC_Behaviour(Behaviour ucBehaviour)
-        {
-            _ucBehaviour = ucBehaviour;
+        private Behaviour _behaviour;
 
+        private static readonly DependencyProperty BehaviourProperty = DependencyProperty.Register("Behaviour", typeof(Behaviour), typeof(UcBehaviour));
+
+        public UcBehaviour()
+        {
             InitializeComponent();
+
+            DataContext = this;
         }
 
-        public Behaviour UcBehaviour
+        public Behaviour Behaviour
         {
-            get => _ucBehaviour;
+            get => _behaviour;
             set
             {
-                if (Equals(value, _ucBehaviour)) return;
-                _ucBehaviour = value ?? throw new ArgumentNullException(nameof(value));
+                if (Equals(value, _behaviour)) return;
+                _behaviour = value;
                 OnPropertyChanged();
+            }
+        }
+
+        private void UpdateTextBinding(object sender, KeyEventArgs e)
+        {
+            if (e.OriginalSource is TextBox textBox)
+            {
+                BindingExpression binding = textBox.GetBindingExpression(TextBox.TextProperty);
+                binding?.UpdateSource();
             }
         }
 

@@ -9,7 +9,8 @@ public class WidthMinusConstantConverter : IValueConverter
     {
         double actualWidth = (double)value;
         double constant = System.Convert.ToDouble(parameter);
-        return actualWidth - constant;
+
+        return Math.Max(actualWidth - constant, 0);
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

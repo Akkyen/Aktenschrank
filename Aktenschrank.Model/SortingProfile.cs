@@ -1,10 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Aktenschrank.Model;
 
-public class SortingProfile : INotifyPropertyChanged, ICloneable
+public class SortingProfile : ObservableObject, ICloneable
 {
     private string _name = string.Empty;
     private string _description = string.Empty;
@@ -12,9 +13,9 @@ public class SortingProfile : INotifyPropertyChanged, ICloneable
     private bool _enabled;
     private bool _autoRun;
 
-    private ObservableSet<Behaviour> _behaviours = new();
+    private ObservableCollection<Behaviour> _behaviours = new();
 
-    private ObservableSet<Target> _targets = new();
+    private ObservableCollection<Target> _targets = new();
 
     public SortingProfile()
     {
@@ -25,9 +26,9 @@ public class SortingProfile : INotifyPropertyChanged, ICloneable
         Name = name;
     }
 
-    public bool AddTarget(string folderPath)
+    public void AddTarget(string folderPath)
     {
-        return Targets.Add(new Target(folderPath));
+        Targets.Add(new Target(folderPath));
     }
 
     public bool RemoveTarget(string folderPath)
@@ -51,9 +52,9 @@ public class SortingProfile : INotifyPropertyChanged, ICloneable
         return Targets.Remove(target);
     }
 
-    public bool AddBehaviour()
+    public void AddBehaviour()
     {
-        return Behaviours.Add(new Behaviour("Behaviour" + Behaviours.Count));
+        Behaviours.Add(new Behaviour("Behaviour" + Behaviours.Count));
     }
 
     public bool RemoveBehaviour(Behaviour behaviour)
@@ -83,7 +84,7 @@ public class SortingProfile : INotifyPropertyChanged, ICloneable
         set
         {
             if (value == _name) return;
-            _name = value ?? throw new ArgumentNullException(nameof(value));
+            _name = value;
             OnPropertyChanged();
         }
     }
@@ -121,7 +122,7 @@ public class SortingProfile : INotifyPropertyChanged, ICloneable
         }
     }
 
-    public ObservableSet<Behaviour> Behaviours
+    public ObservableCollection<Behaviour> Behaviours
     {
         get => _behaviours;
         set
@@ -132,7 +133,7 @@ public class SortingProfile : INotifyPropertyChanged, ICloneable
         }
     }
 
-    public ObservableSet<Target> Targets
+    public ObservableCollection<Target> Targets
     {
         get => _targets;
         set
@@ -143,13 +144,6 @@ public class SortingProfile : INotifyPropertyChanged, ICloneable
         }
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
     public override string ToString()
     {
         return Name;
@@ -157,7 +151,7 @@ public class SortingProfile : INotifyPropertyChanged, ICloneable
 
     public object Clone()
     {
-        SortingProfile rValue = new SortingProfile(_name + "_Duplicate");
+        SortingProfile rValue = new SortingProfile(_name);
 
         rValue.Description = _description;
         rValue.Enabled = _enabled;
@@ -191,6 +185,6 @@ public class SortingProfile : INotifyPropertyChanged, ICloneable
 
     public override int GetHashCode()
     {
-        return _name.GetHashCode();
+        return base.GetHashCode();
     }
 }

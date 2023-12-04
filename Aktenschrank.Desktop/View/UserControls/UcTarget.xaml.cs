@@ -1,24 +1,28 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Input;
 using Aktenschrank.Model;
 
 namespace Aktenschrank.Desktop.View.UserControls
 {
     /// <summary>
-    /// Interaktionslogik für UC_Target.xaml
+    /// Interaktionslogik für UcTarget.xaml
     /// </summary>
-    public partial class UC_Target : UserControl, INotifyPropertyChanged
+    public partial class UcTarget : UserControl, INotifyPropertyChanged
     {
         private Target _target;
 
-        public UC_Target(Target target)
-        {
-            _target = target;
+        private static readonly DependencyProperty TargetProperty = DependencyProperty.Register("Target", typeof(Target), typeof(UcTarget));
 
+
+        public UcTarget()
+        {
             InitializeComponent();
 
-
+            DataContext = this;
         }
 
         public Target Target
@@ -29,6 +33,15 @@ namespace Aktenschrank.Desktop.View.UserControls
                 if (Equals(value, _target)) return;
                 _target = value ?? throw new ArgumentNullException(nameof(value));
                 OnPropertyChanged();
+            }
+        }
+
+        private void UpdateTextBinding(object sender, KeyEventArgs e)
+        {
+            if (e.OriginalSource is TextBox textBox)
+            {
+                BindingExpression binding = textBox.GetBindingExpression(TextBox.TextProperty);
+                binding?.UpdateSource();
             }
         }
 
