@@ -6,30 +6,28 @@ namespace Aktenschrank.Model
 {
     public class Behaviour : INotifyPropertyChanged, ICloneable
     {
+        private Guid _id = Guid.NewGuid();
+
         private string _name;
         private string _description;
 
-        private ObservableCollection<Statement> _statements;
+        private ObservableCollection<Statement> _statements = new ObservableCollection<Statement>();
 
         private bool _enabled;
-        private bool _autoRun;
+        private bool _autorun;
 
         public Behaviour(string name)
         {
             _name = name;
-
-            Statements = new ObservableCollection<Statement>();
         }
 
-        public Behaviour(string name, string description, bool enabled, bool autoRun)
+        public Behaviour(string name, string description, bool enabled, bool autorun)
         {
-            Name = name;
-            Description = description;
+            _name = name;
+            _description = description;
 
-            Enabled = enabled;
-            AutoRun = autoRun;
-
-            Statements = new ObservableCollection<Statement>();
+            _enabled = enabled;
+            _autorun = autorun;
         }
 
         public string Name
@@ -76,13 +74,13 @@ namespace Aktenschrank.Model
             }
         }
 
-        public bool AutoRun
+        public bool Autorun
         {
-            get => _autoRun;
+            get => _autorun;
             set
             {
-                if (value == _autoRun) return;
-                _autoRun = value;
+                if (value == _autorun) return;
+                _autorun = value;
                 OnPropertyChanged();
             }
         }
@@ -109,7 +107,7 @@ namespace Aktenschrank.Model
 
         public object Clone()
         {
-            Behaviour rValue = new Behaviour(_name, _description, _enabled, _autoRun);
+            Behaviour rValue = new Behaviour(_name, _description, _enabled, _autorun);
 
             foreach (Statement statement in _statements)
             {
@@ -121,7 +119,7 @@ namespace Aktenschrank.Model
 
         protected bool Equals(Behaviour other)
         {
-            return _name == other._name;
+            return _id.Equals(other._id);
         }
 
         public override bool Equals(object? obj)
@@ -134,7 +132,7 @@ namespace Aktenschrank.Model
 
         public override int GetHashCode()
         {
-            return _name.GetHashCode();
+            return _id.GetHashCode();
         }
     }
 }

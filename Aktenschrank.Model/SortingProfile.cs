@@ -7,6 +7,8 @@ namespace Aktenschrank.Model;
 
 public class SortingProfile : ObservableObject, ICloneable
 {
+    private Guid _id = Guid.NewGuid();
+
     private string _name = string.Empty;
     private string _description = string.Empty;
 
@@ -172,7 +174,7 @@ public class SortingProfile : ObservableObject, ICloneable
 
     protected bool Equals(SortingProfile other)
     {
-        return _name == other._name;
+        return _id.Equals(other._id);
     }
 
     public override bool Equals(object? obj)
@@ -185,6 +187,6 @@ public class SortingProfile : ObservableObject, ICloneable
 
     public override int GetHashCode()
     {
-        return base.GetHashCode();
+        return _id.GetHashCode();
     }
 }

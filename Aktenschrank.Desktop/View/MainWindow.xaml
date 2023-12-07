@@ -4,13 +4,29 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:uc="clr-namespace:Aktenschrank.Desktop.View.UserControls"
-        xmlns:utils="clr-namespace:Aktenschrank.Utils"
         xmlns:viewModel="clr-namespace:Aktenschrank.Desktop.ViewModel" x:Name="window"
         d:DataContext="{d:DesignInstance Type=viewModel:MainWindowViewModel}"
         x:Class="Aktenschrank.Desktop.View.MainWindow"
         mc:Ignorable="d"
         Icon="/Resources/aktenschrank.ico"
         Title="Aktenschrank" Height="500" Width="800">
+
+    <Window.Resources>
+        <CollectionViewSource x:Key="SortingProfiles" Source="{Binding SortingProfiles }"/>
+        <CollectionViewSource x:Key="Sp_Behaviours" Source="{Binding SpOv_LbSelectedItem.Behaviours}"/>
+        <CollectionViewSource x:Key="Sp_Targets" Source="{Binding SpOv_LbSelectedItem.Targets }"/>
+
+        <Style x:Key="LbiDescriptionAsTooltip" TargetType="ListBoxItem">
+            <Setter Property="ToolTip">
+                <Setter.Value>
+                    <ToolTip>
+                        <TextBlock Text="{Binding Description}"/>
+                    </ToolTip>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
@@ -54,7 +70,8 @@
                     <ColumnDefinition Width="20"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="TbNewSortingProfileName" 
+                <TextBox Grid.Column="0"
+                         x:Name="TbNewSortingProfileName" 
                          VerticalContentAlignment="Center" 
                          PreviewTextInput="OnlyLettersAndNumbers_PreviewTextInput"
                          Margin="0,0,1,0" 
@@ -69,10 +86,18 @@
                 <Button Grid.Column="3" Content="D" Command="{Binding SpOv_Lb_SelectedItem_Duplicate_Command}"/>
             </Grid>
 
-            <ListBox x:Name="LbSortingProfiles" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" ItemsSource="{Binding SortingProfiles}" SelectedItem="{Binding SpOv_LbSelectedItem}">
+            <ListBox x:Name="LbSortingProfiles" 
+                     ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                     ItemContainerStyle="{Binding Source={StaticResource LbiDescriptionAsTooltip}}"
+                     ItemsSource="{Binding Source={StaticResource SortingProfiles}}"
+                     SelectedItem="{Binding SpOv_LbSelectedItem}" SelectionChanged="LbSortingProfiles_SelectionChanged">
                 <ListBox.InputBindings>
-                    <KeyBinding Key="Delete" Command="{Binding SpOv_Lb_SelectedItem_Delete_Command}"/>
-                    <KeyBinding Key="D" Modifiers="Control" Command="{Binding SpOv_Lb_SelectedItem_Duplicate_Command}"/>
+                    <KeyBinding Key="Delete" 
+                                Command="{Binding SpOv_Lb_SelectedItem_Delete_Command}"/>
+                    <KeyBinding Key="D" 
+                                Modifiers="Control" 
+                                Command="{Binding SpOv_Lb_SelectedItem_Duplicate_Command}"/>
                 </ListBox.InputBindings>
 
                 <ListBox.ItemTemplate>
@@ -82,8 +107,16 @@
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="20"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Left" Margin="0,0,20,0"/>
-                            <Button DataContext="{Binding DataContext, ElementName=window}" Grid.Column="1" Content="X" HorizontalAlignment="Stretch" Command="{Binding SpOv_Lb_BtDelete_Command}" CommandParameter="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}"/>
+                            <TextBlock Grid.Column="0" 
+                                       HorizontalAlignment="Left" 
+                                       Margin="0,0,20,0" 
+                                       Text="{Binding Name}"/>
+                            <Button Grid.Column="1" 
+                                    Content="X" 
+                                    HorizontalAlignment="Stretch"
+                                    DataContext="{Binding DataContext, ElementName=window}" 
+                                    Command="{Binding SpOv_Lb_BtDelete_Command}" 
+                                    CommandParameter="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -104,39 +137,168 @@
                         <TextBox TextWrapping="Wrap" Text="{Binding SelectedItem.Description, ElementName=LbSortingProfiles}" PreviewTextInput="OnlyLettersAndNumbers_PreviewTextInput" HorizontalAlignment="Left" Width="{Binding ActualWidth, ConverterParameter=15, Converter={StaticResource WidthMinusConstantConverter}, ElementName=SpDetails, Mode=OneWay}" Margin="0,0,0,7.5" PreviewKeyUp="UpdateTextBinding"/>
 
                         <CheckBox Content="Enabled" Margin="0,0,0,3.5" IsChecked="{Binding SelectedItem.Enabled, ElementName=LbSortingProfiles}"/>
-                        <CheckBox Content="Auto run" Margin="0,0,0,7.5" IsChecked="{Binding SelectedItem.AutoRun, ElementName=LbSortingProfiles}"/>
+                        <CheckBox Content="Autorun" Margin="0,0,0,7.5" IsChecked="{Binding SelectedItem.AutoRun, ElementName=LbSortingProfiles}"/>
 
-                        <StackPanel Orientation="Horizontal">
-                            <Button Content="+" Height="20" Width="20" Command="{Binding SpDt_CreateBehaviour_Command}"/>
-                            <Button Content="-" Height="20" Width="20" Margin="0,0,5,0" Command="{Binding SpDt_DeleteBehaviour_Command}"/>
-                            <TextBlock VerticalAlignment="Center" Text="Behaviours:"/>
-                        </StackPanel>
+                        <Grid Width="{Binding ActualWidth, ConverterParameter=15, Converter={StaticResource WidthMinusConstantConverter}, ElementName=SpDetails, Mode=OneWay}" HorizontalAlignment="Left">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="20"/>
+                            </Grid.ColumnDefinitions>
 
-                        <ListBox x:Name="SpDt_Lb_Behaviours" Height="100" HorizontalAlignment="Left" Margin="0,3.5,0,7.5" 
+                            <Button Grid.Column="0" 
+                                    Content="+" 
+                                    Height="20" 
+                                    Width="20" 
+                                    Command="{Binding SpDt_CreateBehaviour_Command}"/>
+
+                            <Button Grid.Column="1" 
+                                    Content="-" 
+                                    Height="20" 
+                                    Width="20"
+                                    Command="{Binding SpDt_DeleteBehaviour_Command}"/>
+
+                            <TextBlock Grid.Column="3" 
+                                       VerticalAlignment="Center" 
+                                       Text="Behaviours:"/>
+
+                            <Button Grid.Column="4"
+                                    Content="▲" 
+                                    Height="20" 
+                                    Width="20"
+                                    Command="{Binding SpDt_LbBehaviours_BtMoveUp_Command}"/>
+
+                            <Button Grid.Column="5"
+                                    Content="▼"
+                                    Height="20" 
+                                    Width="20"
+                                    Command="{Binding SpDt_LbBehaviours_BtMoveDown_Command}"/>
+                        </Grid>
+
+                        <ListBox x:Name="SpDt_Lb_Behaviours" Height="100" HorizontalAlignment="Left" Margin="0,3.5,0,7.5"
                                  Width="{Binding ActualWidth, ConverterParameter=15, Converter={StaticResource WidthMinusConstantConverter}, ElementName=SpDetails, Mode=OneWay}" 
-                                 ItemsSource="{Binding SelectedItem.Behaviours, ElementName=LbSortingProfiles}"
-                                 SelectedItem="{Binding SpDt_LbBehaviourSelectedItem}"/>
+                                 ItemsSource="{Binding Source={StaticResource Sp_Behaviours}}"
+                                 SelectedItem="{Binding SpDt_LbBehaviourSelectedItem}"
+                                 ItemContainerStyle="{Binding Source={StaticResource LbiDescriptionAsTooltip}}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Left" 
+                                          Width="{Binding ActualWidth, ConverterParameter=15, Converter={StaticResource WidthMinusConstantConverter}, ElementName=SpDt_Lb_Behaviours, Mode=OneWay}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="20"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock HorizontalAlignment="Left" 
+                                                   Margin="0,0,20,0" 
+                                                   Text="{Binding Name}"/>
+                                        <CheckBox Grid.Column="1"
+                                                  ToolTip="Enabled"
+                                                  IsChecked="{Binding Enabled}"/>
+                                        <CheckBox Grid.Column="2"
+                                                  ToolTip="Autorun"
+                                                  IsChecked="{Binding Autorun}"/>
+                                        <Button Grid.Column="3"
+                                                Content="X" 
+                                                HorizontalAlignment="Stretch"
+                                                DataContext="{Binding DataContext, ElementName=window}"
+                                                Command="{Binding SpDt_LbBehaviours_BtDelete_Command}"
+                                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
 
-                        <StackPanel Orientation="Horizontal">
-                            <Button Content="+" Height="20" Width="20" Command="{Binding SpDt_CreateTarget_Command}"/>
-                            <Button Content="-" Height="20" Width="20" Margin="0,0,5,0" Command="{Binding SpDt_DeleteTarget_Command}"/>
-                            <TextBlock VerticalAlignment="Center" Text="Targets:"/>
-                        </StackPanel>
+                        <Grid Width="{Binding ActualWidth, ConverterParameter=15, Converter={StaticResource WidthMinusConstantConverter}, ElementName=SpDetails, Mode=OneWay}" HorizontalAlignment="Left">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="20"/>
+                            </Grid.ColumnDefinitions>
 
-                        <ListBox x:Name="SpDt_Lb_Targets" Height="100"  Margin="0,3.5,0,7.5" 
+                            <Button Grid.Column="0" 
+                                    Content="+" 
+                                    Height="20" 
+                                    Width="20" 
+                                    Command="{Binding SpDt_CreateTarget_Command}"/>
+
+                            <Button Grid.Column="1" 
+                                    Content="-" 
+                                    Height="20" 
+                                    Width="20" 
+                                    Command="{Binding SpDt_DeleteTarget_Command}"/>
+
+                            <TextBlock Grid.Column="3" VerticalAlignment="Center" Text="Targets:"/>
+
+                            <Button Grid.Column="4"
+                                    Content="▲" 
+                                    Height="20" 
+                                    Width="20"
+                                    Command="{Binding SpDt_LbTargets_BtMoveUp_Command}"/>
+
+                            <Button Grid.Column="5"
+                                    Content="▼"
+                                    Height="20" 
+                                    Width="20"
+                                    Command="{Binding SpDt_LbTargets_BtMoveDown_Command}"/>
+                        </Grid>
+
+                        <ListBox x:Name="SpDt_Lb_Targets" Height="100"  Margin="0,3.5,0,7.5"
                                  Width="{Binding ActualWidth, ConverterParameter=15, Converter={StaticResource WidthMinusConstantConverter}, ElementName=SpDetails, Mode=OneWay}" 
-                                 ItemsSource="{Binding SelectedItem.Targets, ElementName=LbSortingProfiles}" HorizontalAlignment="Left"
-                                 SelectedItem="{Binding SpDt_LbTargetSelectedItem}"/>
+                                 ItemsSource="{Binding Source={StaticResource Sp_Targets}}" HorizontalAlignment="Left"
+                                 SelectedItem="{Binding SpDt_LbTargetSelectedItem}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Width="{Binding ActualWidth, ConverterParameter=15, Converter={StaticResource WidthMinusConstantConverter}, ElementName=SpDt_Lb_Targets, Mode=OneWay}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="20"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock HorizontalAlignment="Left"
+                                                   Margin="0,0,20,0"
+                                                   Text="{Binding FolderPath}"/>
+                                        <CheckBox Grid.Column="1"
+                                                  ToolTip="Enabled"
+                                                  IsChecked="{Binding Enabled}"/>
+                                        <CheckBox Grid.Column="2"
+                                                  ToolTip="Recursive"
+                                                  IsChecked="{Binding Recursive}"/>
+                                        <Button Grid.Column="3"
+                                                Content="X" 
+                                                HorizontalAlignment="Stretch"
+                                                DataContext="{Binding DataContext, ElementName=window}" 
+                                                Command="{Binding SpDt_LbTargets_BtDelete_Command}" 
+                                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem x:Name="TiBehaviour" Header="Behaviour" IsEnabled="{Binding SpDt_LbBehaviourSelectedItem, Converter={StaticResource NullToBoolConverter}}">
-                <uc:UcBehaviour Behaviour="{Binding SelectedItem, ElementName=SpDt_Lb_Behaviours}"/>
+            <TabItem x:Name="TiBehaviour" Header="Behaviour">
+                <uc:UcBehaviour IsEnabled="{Binding SelectedItem, Converter={StaticResource NullToBoolConverter}, ElementName=SpDt_Lb_Behaviours}" Loaded="UcBehaviour_Loaded"/>
             </TabItem>
-            <TabItem x:Name="TiTarget" Header="Target" IsEnabled="{Binding SpDt_LbTargetSelectedItem, Converter={StaticResource NullToBoolConverter}}" >
-                <uc:UcTarget Target="{Binding SelectedItem, ElementName=SpDt_Lb_Targets}"/>
+            <TabItem x:Name="TiTarget" Header="Target">
+                <uc:UcTarget IsEnabled="{Binding SelectedItem, Converter={StaticResource NullToBoolConverter}, ElementName=SpDt_Lb_Targets}"/>
             </TabItem>
         </TabControl>
-        <Grid Grid.Row="2" Grid.ColumnSpan="2"/>
+
+        <Grid Grid.Row="2" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+        </Grid>
     </Grid>
 </Window>

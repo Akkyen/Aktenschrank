@@ -4,6 +4,8 @@ namespace Aktenschrank.Model;
 
 public class Target : ObservableObject, ICloneable
 {
+    private Guid _id = Guid.NewGuid();
+
     private string _folderPath = string.Empty;
 
     private bool _enabled;
@@ -73,7 +75,7 @@ public class Target : ObservableObject, ICloneable
 
     protected bool Equals(Target other)
     {
-        return _folderPath == other._folderPath;
+        return _id.Equals(other._id);
     }
 
     public override bool Equals(object? obj)
@@ -86,6 +88,6 @@ public class Target : ObservableObject, ICloneable
 
     public override int GetHashCode()
     {
-        return _folderPath.GetHashCode();
+        return _id.GetHashCode();
     }
 }

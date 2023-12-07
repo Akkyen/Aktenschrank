@@ -24,6 +24,14 @@ namespace Aktenschrank.Desktop.View
             DataContext = _mainWindowViewModel;
         }
 
+        private void UpdateTextBinding(object sender, KeyEventArgs e)
+        {
+            if (e.OriginalSource is TextBox textBox)
+            {
+                BindingExpression binding = textBox.GetBindingExpression(TextBox.TextProperty);
+                binding?.UpdateSource();
+            }
+        }
 
         private void OnlyLettersAndNumbers_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
@@ -37,17 +45,14 @@ namespace Aktenschrank.Desktop.View
             }
         }
 
-        //-----------
-        // General
-        //-----------
-
-        private void UpdateTextBinding(object sender, KeyEventArgs e)
+        private void UcBehaviour_Loaded(object sender, RoutedEventArgs e)
         {
-            if (e.OriginalSource is TextBox textBox)
-            {
-                BindingExpression binding = textBox.GetBindingExpression(TextBox.TextProperty);
-                binding?.UpdateSource();
-            }
+
+        }
+
+        private void LbSortingProfiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

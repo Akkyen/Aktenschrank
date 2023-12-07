@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -20,8 +21,6 @@ namespace Aktenschrank.Desktop.View.UserControls
         public UcBehaviour()
         {
             InitializeComponent();
-
-            DataContext = this;
         }
 
         public Behaviour Behaviour
@@ -37,6 +36,18 @@ namespace Aktenschrank.Desktop.View.UserControls
 
         private void UpdateTextBinding(object sender, KeyEventArgs e)
         {
+            if (e.OriginalSource is TextBox textBox)
+            {
+                BindingExpression binding = textBox.GetBindingExpression(TextBox.TextProperty);
+                binding?.UpdateSource();
+            }
+        }
+
+        private void OnlyLettersAndNumbers_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("([A-Z])|([a-z])|[0-9]");
+            e.Handled = !regex.IsMatch(e.Text);
+
             if (e.OriginalSource is TextBox textBox)
             {
                 BindingExpression binding = textBox.GetBindingExpression(TextBox.TextProperty);
