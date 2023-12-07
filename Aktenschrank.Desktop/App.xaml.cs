@@ -1,6 +1,4 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using Application = System.Windows.Application;
 
 namespace Aktenschrank
 {
@@ -9,6 +7,6 @@ namespace Aktenschrank
     /// </summary>
     public partial class App : Application
     {
-    }
 
+    }
 }
