@@ -3,31 +3,31 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:viewModel="clr-namespace:Aktenschrank.Desktop.View.UserControls"
+             xmlns:viewModel="clr-namespace:Aktenschrank.Desktop.ViewModel"
              xmlns:utils="clr-namespace:Aktenschrank.Utils"
-             d:DataContext="{d:DesignInstance Type=viewModel:UcBehaviour}"
-             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewModel:MainWindowViewModel}"
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel>
         <ScrollViewer VerticalScrollBarVisibility="Auto" DockPanel.Dock="Top">
-            <StackPanel x:Name="SpBehaviour" CanVerticallyScroll="True" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,0,20,0">
+            <StackPanel x:Name="SpBehaviour" CanVerticallyScroll="True" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,0,20,0" PreviewTextInput="OnlyLettersAndNumbers_PreviewTextInput" PreviewKeyUp="UpdateTextBinding">
                 
                 <TextBlock Text="Name:"/>
-                <TextBox HorizontalAlignment="Left" Margin="0,0,0,3.5" PreviewKeyUp="UpdateTextBinding" Text="{Binding Behaviour.Name}" Width="{Binding ActualWidth, ConverterParameter=15, Converter={StaticResource WidthMinusConstantConverter}, ElementName=SpBehaviour, Mode=OneWay}">
+                <TextBox HorizontalAlignment="Left" Margin="0,0,0,3.5" PreviewKeyUp="UpdateTextBinding" Text="{Binding SpDt_LbBehaviourSelectedItem.Name}" Width="{Binding ActualWidth, ConverterParameter=15, Converter={StaticResource WidthMinusConstantConverter}, ElementName=SpBehaviour, Mode=OneWay}">
                     <TextBox.InputBindings>
                         <KeyBinding Key="Enter" Command="utils:Commands.UpdateTextBinding_Command"/>
                     </TextBox.InputBindings>
                 </TextBox>
 
                 <TextBlock Text="Description:"/>
-                <TextBox HorizontalAlignment="Left" Margin="0,0,0,7.5" PreviewKeyUp="UpdateTextBinding" Text="{Binding Behaviour.Description}" Width="{Binding ActualWidth, ConverterParameter=15, Converter={StaticResource WidthMinusConstantConverter}, ElementName=SpBehaviour, Mode=OneWay}">
+                <TextBox HorizontalAlignment="Left" Margin="0,0,0,7.5" PreviewTextInput="OnlyLettersAndNumbers_PreviewTextInput" PreviewKeyUp="UpdateTextBinding" Text="{Binding SpDt_LbBehaviourSelectedItem.Description}" Width="{Binding ActualWidth, ConverterParameter=15, Converter={StaticResource WidthMinusConstantConverter}, ElementName=SpBehaviour, Mode=OneWay}">
                     <TextBox.InputBindings>
                         <KeyBinding Key="Enter" Command="utils:Commands.UpdateTextBinding_Command"/>
                     </TextBox.InputBindings>
                 </TextBox>
 
-                <CheckBox x:Name="CbBehaviourEnabled" Content="Enabled" IsChecked="{Binding Behaviour.Enabled}" Margin="0,0,0,3.5"/>
-                <CheckBox x:Name="CbBehaviourAutorun" Content="AutoRun" IsChecked="{Binding Behaviour.AutoRun}" Margin="0,0,0,7.5"/>
+                <CheckBox x:Name="CbBehaviourEnabled" Content="Enabled" IsChecked="{Binding SpDt_LbBehaviourSelectedItem.Enabled}" Margin="0,0,0,3.5"/>
+                <CheckBox x:Name="CbBehaviourAutorun" Content="Autorun" IsChecked="{Binding SpDt_LbBehaviourSelectedItem.Autorun}" Margin="0,0,0,7.5"/>
             </StackPanel>
         </ScrollViewer>
         <ScrollViewer DockPanel.Dock="Bottom" VerticalScrollBarVisibility="Auto">

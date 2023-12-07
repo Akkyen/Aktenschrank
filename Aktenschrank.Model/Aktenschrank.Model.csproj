@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Actions\" />
-    <Folder Include="Conditions\" />
+    <Compile Remove="Actions\**" />
+    <Compile Remove="Conditions\**" />
+    <EmbeddedResource Remove="Actions\**" />
+    <EmbeddedResource Remove="Conditions\**" />
+    <None Remove="Actions\**" />
+    <None Remove="Conditions\**" />
   </ItemGroup>
 
   <ItemGroup>

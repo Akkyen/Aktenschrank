@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using Aktenschrank.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -29,9 +31,30 @@ public class MainWindowViewModel : ObservableObject
 
     public RelayCommand SpDt_CreateBehaviour_Command { get; }
     public RelayCommand SpDt_DeleteBehaviour_Command { get; }
+    public RelayCommand<Behaviour> SpDt_LbBehaviours_BtDelete_Command { get; }
+
+    public RelayCommand SpDt_LbBehaviours_BtMoveUp_Command { get; }
+    public RelayCommand SpDt_LbBehaviours_BtMoveDown_Command { get; }
+
 
     public RelayCommand SpDt_CreateTarget_Command { get; }
     public RelayCommand SpDt_DeleteTarget_Command { get; }
+    public RelayCommand<Target> SpDt_LbTargets_BtDelete_Command { get; }
+
+    public RelayCommand SpDt_LbTargets_BtMoveUp_Command { get; }
+    public RelayCommand SpDt_LbTargets_BtMoveDown_Command { get; }
+
+    #endregion
+
+    #region UcBh_Commands
+
+    public RelayCommand UcBh__Command { get; }
+
+    #endregion
+
+    #region UcTg_Commands
+
+    public RelayCommand UcTg_SetFolderPath_Command { get; }
 
     #endregion
 
@@ -111,12 +134,22 @@ public class MainWindowViewModel : ObservableObject
         SpOv_Lb_BtDelete_Command = new RelayCommand<SortingProfile>(SpOv_Lb_BtDelete);
 
 
+
         SpDt_CreateBehaviour_Command = new RelayCommand(SpDt_CreateBehaviour);
         SpDt_DeleteBehaviour_Command = new RelayCommand(SpDt_DeleteBehaviour);
+        SpDt_LbBehaviours_BtDelete_Command = new RelayCommand<Behaviour>(SpDt_LbBehaviours_BtDelete);
+        SpDt_LbBehaviours_BtMoveUp_Command = new RelayCommand(SpDt_LbBehaviours_BtUp);
+        SpDt_LbBehaviours_BtMoveDown_Command = new RelayCommand(SpDt_LbBehaviours_BtDown);
 
         SpDt_CreateTarget_Command = new RelayCommand(SpDt_CreateTarget);
         SpDt_DeleteTarget_Command = new RelayCommand(SpDt_DeleteTarget);
+        SpDt_LbTargets_BtDelete_Command = new RelayCommand<Target>(SpDt_LbTargets_BtDelete);
+        SpDt_LbTargets_BtMoveUp_Command = new RelayCommand(SpDt_LbTargets_BtUp);
+        SpDt_LbTargets_BtMoveDown_Command = new RelayCommand(SpDt_LbTargets_BtDown);
+
+        UcTg_SetFolderPath_Command = new RelayCommand(UcTg_SetFolderPath);
     }
+
 
     #region SpOv_Functions
 
@@ -146,26 +179,90 @@ public class MainWindowViewModel : ObservableObject
 
     public void SpDt_CreateBehaviour()
     {
-        SpOv_LbSelectedItem.Behaviours.Add(new Behaviour("Behaviour"));
+        SpOv_LbSelectedItem.AddBehaviour();
     }
     public void SpDt_DeleteBehaviour()
     {
-        SpOv_LbSelectedItem.Behaviours.Remove(SpDt_LbBehaviourSelectedItem);
+        SpOv_LbSelectedItem.RemoveBehaviour(SpDt_LbBehaviourSelectedItem);
     }
+
+    private void SpDt_LbBehaviours_BtDelete(Behaviour behaviour)
+    {
+        SpOv_LbSelectedItem.RemoveBehaviour(behaviour);
+    }
+
+    private void SpDt_LbBehaviours_BtUp()
+    {
+        int indexOfSelectedTarget = SpOv_LbSelectedItem.Behaviours.IndexOf(SpDt_LbBehaviourSelectedItem);
+
+        if (indexOfSelectedTarget > 0)
+        {
+            SpOv_LbSelectedItem.Behaviours.Move(indexOfSelectedTarget, indexOfSelectedTarget - 1);
+        }
+    }
+
+    private void SpDt_LbBehaviours_BtDown()
+    {
+        int indexOfSelectedTarget = SpOv_LbSelectedItem.Behaviours.IndexOf(SpDt_LbBehaviourSelectedItem);
+
+        if (indexOfSelectedTarget < SpOv_LbSelectedItem.Behaviours.Count - 1)
+        {
+            SpOv_LbSelectedItem.Behaviours.Move(indexOfSelectedTarget, indexOfSelectedTarget + 1);
+        }
+    }
+
 
     public void SpDt_CreateTarget()
     {
-        string folderPath = string.Empty;
-
         OpenFolderDialog openFolderDialog = new OpenFolderDialog();
-        if (openFolderDialog.ShowDialog() == true)
-            folderPath = openFolderDialog.FolderName;
-
-        SpOv_LbSelectedItem.Targets.Add(new Target(folderPath));
+        if (openFolderDialog.ShowDialog() == true && openFolderDialog.FolderName != "")
+            SpOv_LbSelectedItem.AddTarget(openFolderDialog.FolderName);
     }
     public void SpDt_DeleteTarget()
     {
-        SpOv_LbSelectedItem.Targets.Remove(SpDt_LbTargetSelectedItem);
+        SpOv_LbSelectedItem.RemoveTarget(SpDt_LbTargetSelectedItem);
+    }
+
+    private void SpDt_LbTargets_BtDelete(Target target)
+    {
+        SpOv_LbSelectedItem.RemoveTarget(target);
+    }
+
+    private void SpDt_LbTargets_BtUp()
+    {
+        int indexOfSelectedTarget = SpOv_LbSelectedItem.Targets.IndexOf(SpDt_LbTargetSelectedItem);
+
+        if (indexOfSelectedTarget > 0)
+        {
+            SpOv_LbSelectedItem.Targets.Move(indexOfSelectedTarget, indexOfSelectedTarget - 1);
+        }
+    }
+
+    private void SpDt_LbTargets_BtDown()
+    {
+        int indexOfSelectedTarget = SpOv_LbSelectedItem.Targets.IndexOf(SpDt_LbTargetSelectedItem);
+
+        if (indexOfSelectedTarget < SpOv_LbSelectedItem.Targets.Count - 1)
+        {
+            SpOv_LbSelectedItem.Targets.Move(indexOfSelectedTarget, indexOfSelectedTarget + 1);
+        }
+    }
+
+    #endregion
+
+    #region UcBh_Functions
+
+
+
+    #endregion
+
+    #region UcTg_Functions
+
+    private void UcTg_SetFolderPath()
+    {
+        OpenFolderDialog openFolderDialog = new OpenFolderDialog();
+        if (openFolderDialog.ShowDialog() == true)
+            SpDt_LbTargetSelectedItem.FolderPath = openFolderDialog.FolderName;
     }
 
     #endregion
@@ -195,6 +292,26 @@ public class MainWindowViewModel : ObservableObject
             OnPropertyChanged();
         }
     }
+
+    
+
+    #endregion
+
+    private void OnlyLettersAndNumbers_PreviewTextInput(object sender, TextCompositionEventArgs e)
+    {
+        Regex regex = new Regex("([A-Z])|([a-z])|[0-9]");
+        e.Handled = !regex.IsMatch(e.Text);
+
+        if (e.OriginalSource is TextBox textBox)
+        {
+            BindingExpression binding = textBox.GetBindingExpression(TextBox.TextProperty);
+            binding?.UpdateSource();
+        }
+    }
+
+    #region Utils
+
+
 
     #endregion
 }
