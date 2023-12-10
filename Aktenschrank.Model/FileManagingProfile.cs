@@ -1,11 +1,9 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Aktenschrank.Model;
 
-public class SortingProfile : ObservableObject, ICloneable
+public class FileManagingProfile : ObservableObject, ICloneable
 {
     private Guid _id = Guid.NewGuid();
 
@@ -14,16 +12,17 @@ public class SortingProfile : ObservableObject, ICloneable
 
     private bool _enabled;
     private bool _autoRun;
+    private bool _autonomous;
 
     private ObservableCollection<Behaviour> _behaviours = new();
 
     private ObservableCollection<Target> _targets = new();
 
-    public SortingProfile()
+    public FileManagingProfile()
     {
     }
 
-    public SortingProfile(string name)
+    public FileManagingProfile(string name)
     {
         Name = name;
     }
@@ -124,6 +123,17 @@ public class SortingProfile : ObservableObject, ICloneable
         }
     }
 
+    public bool Autonomous
+    {
+        get => _autonomous;
+        set
+        {
+            if (value == _autonomous) return;
+            _autonomous = value;
+            OnPropertyChanged();
+        }
+    }
+
     public ObservableCollection<Behaviour> Behaviours
     {
         get => _behaviours;
@@ -153,7 +163,7 @@ public class SortingProfile : ObservableObject, ICloneable
 
     public object Clone()
     {
-        SortingProfile rValue = new SortingProfile(_name);
+        FileManagingProfile rValue = new FileManagingProfile(_name);
 
         rValue.Description = _description;
         rValue.Enabled = _enabled;
@@ -172,7 +182,7 @@ public class SortingProfile : ObservableObject, ICloneable
         return rValue;
     }
 
-    protected bool Equals(SortingProfile other)
+    protected bool Equals(FileManagingProfile other)
     {
         return _id.Equals(other._id);
     }
@@ -182,7 +192,7 @@ public class SortingProfile : ObservableObject, ICloneable
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return Equals((SortingProfile)obj);
+        return Equals((FileManagingProfile)obj);
     }
 
     public override int GetHashCode()

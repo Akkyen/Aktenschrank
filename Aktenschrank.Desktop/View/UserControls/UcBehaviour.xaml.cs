@@ -1,73 +1,28 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
+﻿using System.Windows;
 using Aktenschrank.Model;
+using Aktenschrank.Desktop.Utils;
 
 namespace Aktenschrank.Desktop.View.UserControls
 {
     /// <summary>
     /// Interaktionslogik für UcBehaviour.xaml
     /// </summary>
-    public partial class UcBehaviour : UserControl, INotifyPropertyChanged
+    public partial class UcBehaviour
     {
         private Behaviour _behaviour;
-
-        private static readonly DependencyProperty BehaviourProperty = DependencyProperty.Register("Behaviour", typeof(Behaviour), typeof(UcBehaviour));
 
         public UcBehaviour()
         {
             InitializeComponent();
-        }
 
-        public Behaviour Behaviour
-        {
-            get => _behaviour;
-            set
-            {
-                if (Equals(value, _behaviour)) return;
-                _behaviour = value;
-                OnPropertyChanged();
-            }
-        }
+            BhDt_TbName.PreviewTextInput += InputHelper.CheckIfNameIsAllowed_PreviewTextInput;
+            BhDt_TbDescription.PreviewTextInput += InputHelper.CheckIfTextIsAllowed_PreviewTextInput;
 
-        private void UpdateTextBinding(object sender, KeyEventArgs e)
-        {
-            if (e.OriginalSource is TextBox textBox)
-            {
-                BindingExpression binding = textBox.GetBindingExpression(TextBox.TextProperty);
-                binding?.UpdateSource();
-            }
-        }
+            BhDt_TbName.KeyUp += InputHelper.UpdateTextBinding;
+            BhDt_TbDescription.KeyUp += InputHelper.UpdateTextBinding;
 
-        private void OnlyLettersAndNumbers_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            Regex regex = new Regex("([A-Z])|([a-z])|[0-9]");
-            e.Handled = !regex.IsMatch(e.Text);
-
-            if (e.OriginalSource is TextBox textBox)
-            {
-                BindingExpression binding = textBox.GetBindingExpression(TextBox.TextProperty);
-                binding?.UpdateSource();
-            }
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-        {
-            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-            field = value;
-            OnPropertyChanged(propertyName);
-            return true;
+            DataObject.AddPastingHandler(BhDt_TbName, InputHelper.OnPaste);
+            DataObject.AddPastingHandler(BhDt_TbDescription, InputHelper.OnPaste);
         }
     }
 }

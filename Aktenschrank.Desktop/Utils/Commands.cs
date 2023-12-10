@@ -3,7 +3,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 
-namespace Aktenschrank.Utils;
+namespace Aktenschrank.Desktop.Utils;
 
 public static class Commands
 {
@@ -16,18 +16,4 @@ public static class Commands
             binding?.UpdateSource();
         }
     });
-
-    public static RelayCommand<ListBox> DeleteSelectedItem_Command = new RelayCommand<ListBox>(listBox =>
-    {
-        if (listBox != null)
-        {
-            foreach (var item in listBox.SelectedItems)
-            {
-                listBox.Items.Remove(item);
-            }
-        }
-    });
-
-    public static RoutedCommand LbDeleteSortingProfileCommand = new();
-    public static RoutedCommand LbDuplicateSortingProfileCommand = new();
 }

@@ -4,23 +4,27 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModel="clr-namespace:Aktenschrank.Desktop.ViewModel"
-             xmlns:utils="clr-namespace:Aktenschrank.Utils"
+             xmlns:utils="clr-namespace:Aktenschrank.Desktop.Utils"
              d:DataContext="{d:DesignInstance Type=viewModel:MainWindowViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel x:Name="SpTarget" CanVerticallyScroll="True" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,0,20,0">
+        <StackPanel x:Name="FmpTarget" CanVerticallyScroll="True" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,0,20,0">
             <TextBlock Text="Path:" Height="17.96"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBox Text="{Binding SpDt_LbTargetSelectedItem.FolderPath}" Width="{Binding ActualWidth, ConverterParameter=33, Converter={StaticResource WidthMinusConstantConverter}, ElementName=SpTarget, Mode=OneWay}" IsReadOnly="True">
+                <TextBox x:Name="TgDt_TbFolderPath"
+                         IsReadOnly="True"
+                         Text="{Binding FmpDt_LbTargetSelectedItem.FolderPath}" 
+                         Width="{Binding ActualWidth, ConverterParameter=33, 
+                         Converter={StaticResource WidthMinusConstantConverter}, ElementName=FmpTarget, Mode=OneWay}">
                     <TextBox.InputBindings>
                         <KeyBinding Key="Enter" Command="utils:Commands.UpdateTextBinding_Command"/>
                     </TextBox.InputBindings>
                 </TextBox>
                 <Button Content="..." Width="17.96" Height="17.96" Command="{Binding UcTg_SetFolderPath_Command}"/>
             </StackPanel>
-            <CheckBox Content="Enabled"   IsChecked="{Binding SpDt_LbTargetSelectedItem.Enabled}" Margin="0,7,0,3.5"/>
-            <CheckBox Content="Recursive" IsChecked="{Binding SpDt_LbTargetSelectedItem.Recursive}"/>
+            <CheckBox Content="Enabled"   IsChecked="{Binding FmpDt_LbTargetSelectedItem.Enabled}" Margin="0,7,0,3.5"/>
+            <CheckBox Content="Recursive" IsChecked="{Binding FmpDt_LbTargetSelectedItem.Recursive}"/>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

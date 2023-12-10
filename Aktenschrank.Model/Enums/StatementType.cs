@@ -2,6 +2,7 @@
 
 public enum StatementType
 {
-    ACTION,
-    CONDITION,
+    Action,
+    Check,
+    Condition,
 }

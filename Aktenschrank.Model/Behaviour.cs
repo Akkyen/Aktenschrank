@@ -11,7 +11,8 @@ namespace Aktenschrank.Model
         private string _name;
         private string _description;
 
-        private ObservableCollection<Statement> _statements = new ObservableCollection<Statement>();
+        private AStatement _rootStatement;
+        private ObservableCollection<AStatement> _statements = new();
 
         private bool _enabled;
         private bool _autorun;
@@ -52,7 +53,7 @@ namespace Aktenschrank.Model
             }
         }
 
-        public ObservableCollection<Statement> Statements
+        public ObservableCollection<AStatement> Statements
         {
             get => _statements;
             set
@@ -109,9 +110,9 @@ namespace Aktenschrank.Model
         {
             Behaviour rValue = new Behaviour(_name, _description, _enabled, _autorun);
 
-            foreach (Statement statement in _statements)
+            foreach (AStatement statement in _statements)
             {
-                rValue._statements.Add((Statement)statement.Clone());
+                rValue._statements.Add((AStatement)statement.Clone());
             }
 
             return rValue;

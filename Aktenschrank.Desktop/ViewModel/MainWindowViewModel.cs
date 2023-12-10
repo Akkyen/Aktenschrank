@@ -1,7 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using System.Text.RegularExpressions;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using Aktenschrank.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -14,35 +12,35 @@ namespace Aktenschrank.Desktop.ViewModel;
 
 public class MainWindowViewModel : ObservableObject
 {
-    private ObservableCollection<SortingProfile> _sortingProfiles = new();
+    private ObservableCollection<FileManagingProfile> _fileManagingProfiles = new();
 
-    #region SpOv_Commands
+    #region FmpOv_Commands
 
-    public RelayCommand SpOv_Create_Sp_Command { get; }
+    public RelayCommand FmpOv_Create_Fmp_Command { get; }
 
-    public RelayCommand SpOv_Lb_SelectedItem_Delete_Command { get; }
-    public RelayCommand SpOv_Lb_SelectedItem_Duplicate_Command { get; }
+    public RelayCommand FmpOv_Lb_SelectedItem_Delete_Command { get; }
+    public RelayCommand FmpOv_Lb_SelectedItem_Duplicate_Command { get; }
 
-    public RelayCommand<SortingProfile> SpOv_Lb_BtDelete_Command { get; }
+    public RelayCommand<FileManagingProfile> FmpOv_Lb_BtDelete_Command { get; }
 
     #endregion
 
-    #region SpDt_Commands
+    #region FmpDt_Commands
 
-    public RelayCommand SpDt_CreateBehaviour_Command { get; }
-    public RelayCommand SpDt_DeleteBehaviour_Command { get; }
-    public RelayCommand<Behaviour> SpDt_LbBehaviours_BtDelete_Command { get; }
+    public RelayCommand FmpDt_CreateBehaviour_Command { get; }
+    public RelayCommand FmpDt_DeleteBehaviour_Command { get; }
+    public RelayCommand<Behaviour> FmpDt_LbBehaviours_BtDelete_Command { get; }
 
-    public RelayCommand SpDt_LbBehaviours_BtMoveUp_Command { get; }
-    public RelayCommand SpDt_LbBehaviours_BtMoveDown_Command { get; }
+    public RelayCommand FmpDt_LbBehaviours_BtMoveUp_Command { get; }
+    public RelayCommand FmpDt_LbBehaviours_BtMoveDown_Command { get; }
 
 
-    public RelayCommand SpDt_CreateTarget_Command { get; }
-    public RelayCommand SpDt_DeleteTarget_Command { get; }
-    public RelayCommand<Target> SpDt_LbTargets_BtDelete_Command { get; }
+    public RelayCommand FmpDt_CreateTarget_Command { get; }
+    public RelayCommand FmpDt_DeleteTarget_Command { get; }
+    public RelayCommand<Target> FmpDt_LbTargets_BtDelete_Command { get; }
 
-    public RelayCommand SpDt_LbTargets_BtMoveUp_Command { get; }
-    public RelayCommand SpDt_LbTargets_BtMoveDown_Command { get; }
+    public RelayCommand FmpDt_LbTargets_BtMoveUp_Command { get; }
+    public RelayCommand FmpDt_LbTargets_BtMoveDown_Command { get; }
 
     #endregion
 
@@ -58,14 +56,14 @@ public class MainWindowViewModel : ObservableObject
 
     #endregion
 
-    #region Bindings_SortingProfile_Overview
+    #region Bindings_FileManagingProfile_Overview
 
     private string _spOv_TbName;
-    private SortingProfile _spOv_LbSelectedItem;
+    private FileManagingProfile _spOv_LbSelectedItem;
 
     #region Properties
 
-    public string SpOv_TbName
+    public string FmpOv_TbName
     {
         get => _spOv_TbName;
         set
@@ -76,7 +74,7 @@ public class MainWindowViewModel : ObservableObject
         }
     }
 
-    public SortingProfile SpOv_LbSelectedItem
+    public FileManagingProfile FmpOv_LbSelectedItem
     {
         get => _spOv_LbSelectedItem;
         set
@@ -91,14 +89,14 @@ public class MainWindowViewModel : ObservableObject
 
     #endregion
 
-    #region Bindings_SortingProfile_Details
+    #region Bindings_FileManagingProfile_Details
 
     private Behaviour _spDt_LbBehaviourSelectedItem;
     private Target _spDt_LbTargetSelectedItem;
 
     #region Properties
 
-    public Behaviour SpDt_LbBehaviourSelectedItem
+    public Behaviour FmpDt_LbBehaviourSelectedItem
     {
         get => _spDt_LbBehaviourSelectedItem;
         set
@@ -109,7 +107,7 @@ public class MainWindowViewModel : ObservableObject
         }
     }
 
-    public Target SpDt_LbTargetSelectedItem
+    public Target FmpDt_LbTargetSelectedItem
     {
         get => _spDt_LbTargetSelectedItem;
         set
@@ -126,125 +124,125 @@ public class MainWindowViewModel : ObservableObject
 
     public MainWindowViewModel()
     {
-        SpOv_Create_Sp_Command = new RelayCommand(SpOv_BtCreate_Sp);
+        FmpOv_Create_Fmp_Command = new RelayCommand(FmpOv_BtCreate_Fmp);
 
-        SpOv_Lb_SelectedItem_Delete_Command = new RelayCommand(SpOv_Lb_SelectedItem_Delete);
-        SpOv_Lb_SelectedItem_Duplicate_Command = new RelayCommand(SpOv_Lb_SelectedItem_Duplicate);
+        FmpOv_Lb_SelectedItem_Delete_Command = new RelayCommand(FmpOv_Lb_SelectedItem_Delete);
+        FmpOv_Lb_SelectedItem_Duplicate_Command = new RelayCommand(FmpOv_Lb_SelectedItem_Duplicate);
 
-        SpOv_Lb_BtDelete_Command = new RelayCommand<SortingProfile>(SpOv_Lb_BtDelete);
+        FmpOv_Lb_BtDelete_Command = new RelayCommand<FileManagingProfile>(FmpOv_Lb_BtDelete);
 
 
 
-        SpDt_CreateBehaviour_Command = new RelayCommand(SpDt_CreateBehaviour);
-        SpDt_DeleteBehaviour_Command = new RelayCommand(SpDt_DeleteBehaviour);
-        SpDt_LbBehaviours_BtDelete_Command = new RelayCommand<Behaviour>(SpDt_LbBehaviours_BtDelete);
-        SpDt_LbBehaviours_BtMoveUp_Command = new RelayCommand(SpDt_LbBehaviours_BtUp);
-        SpDt_LbBehaviours_BtMoveDown_Command = new RelayCommand(SpDt_LbBehaviours_BtDown);
+        FmpDt_CreateBehaviour_Command = new RelayCommand(FmpDt_CreateBehaviour);
+        FmpDt_DeleteBehaviour_Command = new RelayCommand(FmpDt_DeleteBehaviour);
+        FmpDt_LbBehaviours_BtDelete_Command = new RelayCommand<Behaviour>(FmpDt_LbBehaviours_BtDelete);
+        FmpDt_LbBehaviours_BtMoveUp_Command = new RelayCommand(FmpDt_LbBehaviours_BtUp);
+        FmpDt_LbBehaviours_BtMoveDown_Command = new RelayCommand(FmpDt_LbBehaviours_BtDown);
 
-        SpDt_CreateTarget_Command = new RelayCommand(SpDt_CreateTarget);
-        SpDt_DeleteTarget_Command = new RelayCommand(SpDt_DeleteTarget);
-        SpDt_LbTargets_BtDelete_Command = new RelayCommand<Target>(SpDt_LbTargets_BtDelete);
-        SpDt_LbTargets_BtMoveUp_Command = new RelayCommand(SpDt_LbTargets_BtUp);
-        SpDt_LbTargets_BtMoveDown_Command = new RelayCommand(SpDt_LbTargets_BtDown);
+        FmpDt_CreateTarget_Command = new RelayCommand(FmpDt_CreateTarget);
+        FmpDt_DeleteTarget_Command = new RelayCommand(FmpDt_DeleteTarget);
+        FmpDt_LbTargets_BtDelete_Command = new RelayCommand<Target>(FmpDt_LbTargets_BtDelete);
+        FmpDt_LbTargets_BtMoveUp_Command = new RelayCommand(FmpDt_LbTargets_BtUp);
+        FmpDt_LbTargets_BtMoveDown_Command = new RelayCommand(FmpDt_LbTargets_BtDown);
 
         UcTg_SetFolderPath_Command = new RelayCommand(UcTg_SetFolderPath);
     }
 
 
-    #region SpOv_Functions
+    #region FmpOv_Functions
 
-    private void SpOv_BtCreate_Sp()
+    private void FmpOv_BtCreate_Fmp()
     {
-        SortingProfiles.Add(new SortingProfile(SpOv_TbName));
+        FileManagingProfiles.Add(new FileManagingProfile(FmpOv_TbName));
     }
 
-    private void SpOv_Lb_SelectedItem_Delete()
+    private void FmpOv_Lb_SelectedItem_Delete()
     {
-        SortingProfiles.Remove(SpOv_LbSelectedItem);
+        FileManagingProfiles.Remove(FmpOv_LbSelectedItem);
     }
 
-    private void SpOv_Lb_SelectedItem_Duplicate()
+    private void FmpOv_Lb_SelectedItem_Duplicate()
     {
-        SortingProfiles.Add((SortingProfile)SpOv_LbSelectedItem.Clone());
+        FileManagingProfiles.Add((FileManagingProfile)FmpOv_LbSelectedItem.Clone());
     }
 
-    private void SpOv_Lb_BtDelete(SortingProfile sortingProfile)
+    private void FmpOv_Lb_BtDelete(FileManagingProfile fileManagingProfile)
     {
-        SortingProfiles.Remove(sortingProfile);
+        FileManagingProfiles.Remove(fileManagingProfile);
     }
 
     #endregion
 
-    #region SpDt_Functions
+    #region FmpDt_Functions
 
-    public void SpDt_CreateBehaviour()
+    public void FmpDt_CreateBehaviour()
     {
-        SpOv_LbSelectedItem.AddBehaviour();
+        FmpOv_LbSelectedItem.AddBehaviour();
     }
-    public void SpDt_DeleteBehaviour()
+    public void FmpDt_DeleteBehaviour()
     {
-        SpOv_LbSelectedItem.RemoveBehaviour(SpDt_LbBehaviourSelectedItem);
-    }
-
-    private void SpDt_LbBehaviours_BtDelete(Behaviour behaviour)
-    {
-        SpOv_LbSelectedItem.RemoveBehaviour(behaviour);
+        FmpOv_LbSelectedItem.RemoveBehaviour(FmpDt_LbBehaviourSelectedItem);
     }
 
-    private void SpDt_LbBehaviours_BtUp()
+    private void FmpDt_LbBehaviours_BtDelete(Behaviour behaviour)
     {
-        int indexOfSelectedTarget = SpOv_LbSelectedItem.Behaviours.IndexOf(SpDt_LbBehaviourSelectedItem);
+        FmpOv_LbSelectedItem.RemoveBehaviour(behaviour);
+    }
+
+    private void FmpDt_LbBehaviours_BtUp()
+    {
+        int indexOfSelectedTarget = FmpOv_LbSelectedItem.Behaviours.IndexOf(FmpDt_LbBehaviourSelectedItem);
 
         if (indexOfSelectedTarget > 0)
         {
-            SpOv_LbSelectedItem.Behaviours.Move(indexOfSelectedTarget, indexOfSelectedTarget - 1);
+            FmpOv_LbSelectedItem.Behaviours.Move(indexOfSelectedTarget, indexOfSelectedTarget - 1);
         }
     }
 
-    private void SpDt_LbBehaviours_BtDown()
+    private void FmpDt_LbBehaviours_BtDown()
     {
-        int indexOfSelectedTarget = SpOv_LbSelectedItem.Behaviours.IndexOf(SpDt_LbBehaviourSelectedItem);
+        int indexOfSelectedTarget = FmpOv_LbSelectedItem.Behaviours.IndexOf(FmpDt_LbBehaviourSelectedItem);
 
-        if (indexOfSelectedTarget < SpOv_LbSelectedItem.Behaviours.Count - 1)
+        if (indexOfSelectedTarget < FmpOv_LbSelectedItem.Behaviours.Count - 1)
         {
-            SpOv_LbSelectedItem.Behaviours.Move(indexOfSelectedTarget, indexOfSelectedTarget + 1);
+            FmpOv_LbSelectedItem.Behaviours.Move(indexOfSelectedTarget, indexOfSelectedTarget + 1);
         }
     }
 
 
-    public void SpDt_CreateTarget()
+    public void FmpDt_CreateTarget()
     {
         OpenFolderDialog openFolderDialog = new OpenFolderDialog();
         if (openFolderDialog.ShowDialog() == true && openFolderDialog.FolderName != "")
-            SpOv_LbSelectedItem.AddTarget(openFolderDialog.FolderName);
+            FmpOv_LbSelectedItem.AddTarget(openFolderDialog.FolderName);
     }
-    public void SpDt_DeleteTarget()
+    public void FmpDt_DeleteTarget()
     {
-        SpOv_LbSelectedItem.RemoveTarget(SpDt_LbTargetSelectedItem);
-    }
-
-    private void SpDt_LbTargets_BtDelete(Target target)
-    {
-        SpOv_LbSelectedItem.RemoveTarget(target);
+        FmpOv_LbSelectedItem.RemoveTarget(FmpDt_LbTargetSelectedItem);
     }
 
-    private void SpDt_LbTargets_BtUp()
+    private void FmpDt_LbTargets_BtDelete(Target target)
     {
-        int indexOfSelectedTarget = SpOv_LbSelectedItem.Targets.IndexOf(SpDt_LbTargetSelectedItem);
+        FmpOv_LbSelectedItem.RemoveTarget(target);
+    }
+
+    private void FmpDt_LbTargets_BtUp()
+    {
+        int indexOfSelectedTarget = FmpOv_LbSelectedItem.Targets.IndexOf(FmpDt_LbTargetSelectedItem);
 
         if (indexOfSelectedTarget > 0)
         {
-            SpOv_LbSelectedItem.Targets.Move(indexOfSelectedTarget, indexOfSelectedTarget - 1);
+            FmpOv_LbSelectedItem.Targets.Move(indexOfSelectedTarget, indexOfSelectedTarget - 1);
         }
     }
 
-    private void SpDt_LbTargets_BtDown()
+    private void FmpDt_LbTargets_BtDown()
     {
-        int indexOfSelectedTarget = SpOv_LbSelectedItem.Targets.IndexOf(SpDt_LbTargetSelectedItem);
+        int indexOfSelectedTarget = FmpOv_LbSelectedItem.Targets.IndexOf(FmpDt_LbTargetSelectedItem);
 
-        if (indexOfSelectedTarget < SpOv_LbSelectedItem.Targets.Count - 1)
+        if (indexOfSelectedTarget < FmpOv_LbSelectedItem.Targets.Count - 1)
         {
-            SpOv_LbSelectedItem.Targets.Move(indexOfSelectedTarget, indexOfSelectedTarget + 1);
+            FmpOv_LbSelectedItem.Targets.Move(indexOfSelectedTarget, indexOfSelectedTarget + 1);
         }
     }
 
@@ -262,56 +260,36 @@ public class MainWindowViewModel : ObservableObject
     {
         OpenFolderDialog openFolderDialog = new OpenFolderDialog();
         if (openFolderDialog.ShowDialog() == true)
-            SpDt_LbTargetSelectedItem.FolderPath = openFolderDialog.FolderName;
+            FmpDt_LbTargetSelectedItem.FolderPath = openFolderDialog.FolderName;
     }
 
     #endregion
 
-    private void LbSortingProfiles_KeyDuplicate(ListBox lbSortingProfiles, KeyEventArgs e)
+    private void LbFileManagingProfiles_KeyDuplicate(ListBox lbFileManagingProfiles, KeyEventArgs e)
     {
-        if (lbSortingProfiles.SelectedItem is SortingProfile sortingProfile &&
-            lbSortingProfiles.SelectedItems is ObservableCollection<SortingProfile> sortingProfiles)
+        if (lbFileManagingProfiles.SelectedItem is FileManagingProfile fileManagingProfile &&
+            lbFileManagingProfiles.SelectedItems is ObservableCollection<FileManagingProfile> fileManagingProfiles)
         {
-            string origName = sortingProfile.Name;
+            string origName = fileManagingProfile.Name;
 
-            sortingProfile.Name = origName + "_Duplicate";
+            fileManagingProfile.Name = origName + "_Duplicate";
 
-            sortingProfiles.Add(sortingProfile);
+            fileManagingProfiles.Add(fileManagingProfile);
         }
     }
 
     #region Properties
 
-    public ObservableCollection<SortingProfile> SortingProfiles
+    public ObservableCollection<FileManagingProfile> FileManagingProfiles
     {
-        get => _sortingProfiles;
+        get => _fileManagingProfiles;
         set
         {
-            if (Equals(value, _sortingProfiles)) return;
-            _sortingProfiles = value ?? throw new ArgumentNullException(nameof(value));
+            if (Equals(value, _fileManagingProfiles)) return;
+            _fileManagingProfiles = value ?? throw new ArgumentNullException(nameof(value));
             OnPropertyChanged();
         }
     }
-
-    
-
-    #endregion
-
-    private void OnlyLettersAndNumbers_PreviewTextInput(object sender, TextCompositionEventArgs e)
-    {
-        Regex regex = new Regex("([A-Z])|([a-z])|[0-9]");
-        e.Handled = !regex.IsMatch(e.Text);
-
-        if (e.OriginalSource is TextBox textBox)
-        {
-            BindingExpression binding = textBox.GetBindingExpression(TextBox.TextProperty);
-            binding?.UpdateSource();
-        }
-    }
-
-    #region Utils
-
-
 
     #endregion
 }

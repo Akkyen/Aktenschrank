@@ -7,19 +7,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <PackageIcon>Aktenschrank.png</PackageIcon>
-    <UseWindowsForms>False</UseWindowsForms>
+    <IsPublishable>False</IsPublishable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Commands\**" />
-    <EmbeddedResource Remove="Commands\**" />
-    <None Remove="Commands\**" />
-    <Page Remove="Commands\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="ValueConverters\NumberMinusConstantConverter.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />

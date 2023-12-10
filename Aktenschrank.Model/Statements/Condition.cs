@@ -1,14 +1,20 @@
 ﻿using System.Collections.ObjectModel;
 using Aktenschrank.Model.Enums;
 
-namespace Aktenschrank.Model;
+namespace Aktenschrank.Model.Statements;
 
-public class Condition : Statement
+public class Condition : AStatementWithBlock
 {
-    private ConditionType _conditionType;
-    private ConditionComparatorType _conditionComparatorType;
+    private ConditionType _conditionType = ConditionType.If;
 
-    private ObservableCollection<Statement> _body = new();
+    private ObservableCollection<Check> _checks = new();
+
+    private AStatement _body;
+
+    public Condition(AStatement predecessor)
+    {
+        _predecessor = predecessor;
+    }
 
     public ConditionType ConditionType
     {
@@ -21,18 +27,18 @@ public class Condition : Statement
         }
     }
 
-    public ConditionComparatorType ConditionComparatorType
+    public ObservableCollection<Check> Checks
     {
-        get => _conditionComparatorType;
+        get => _checks;
         set
         {
-            if (value == _conditionComparatorType) return;
-            _conditionComparatorType = value;
+            if (Equals(value, _checks)) return;
+            _checks = value ?? throw new ArgumentNullException(nameof(value));
             OnPropertyChanged();
         }
     }
 
-    public ObservableCollection<Statement> Body
+    public AStatement Body
     {
         get => _body;
         set

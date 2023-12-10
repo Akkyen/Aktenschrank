@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Aktenschrank.FileManager\Aktenschrank.FileManager.csproj" />
     <ProjectReference Include="..\Aktenschrank.Model\Aktenschrank.Model.csproj" />
   </ItemGroup>
 

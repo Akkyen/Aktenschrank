@@ -1,12 +1,6 @@
-﻿using Aktenschrank.Model;
-using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+﻿using System.Windows;
 using Aktenschrank.Desktop.ViewModel;
-using Microsoft.Win32;
-using KeyEventArgs = System.Windows.Input.KeyEventArgs;
-using System.Windows.Data;
+using Aktenschrank.Desktop.Utils;
 
 namespace Aktenschrank.Desktop.View
 {
@@ -22,37 +16,24 @@ namespace Aktenschrank.Desktop.View
             InitializeComponent();
 
             DataContext = _mainWindowViewModel;
-        }
 
-        private void UpdateTextBinding(object sender, KeyEventArgs e)
-        {
-            if (e.OriginalSource is TextBox textBox)
-            {
-                BindingExpression binding = textBox.GetBindingExpression(TextBox.TextProperty);
-                binding?.UpdateSource();
-            }
-        }
 
-        private void OnlyLettersAndNumbers_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            Regex regex = new Regex("([A-Z])|([a-z])|[0-9]");
-            e.Handled = !regex.IsMatch(e.Text);
+            FmpOv_TbNewProfileName.PreviewTextInput += InputHelper.CheckIfTextIsAllowed_PreviewTextInput;
 
-            if (e.OriginalSource is TextBox textBox)
-            {
-                BindingExpression binding = textBox.GetBindingExpression(TextBox.TextProperty);
-                binding?.UpdateSource();
-            }
-        }
+            FmpDt_TbName.PreviewTextInput += InputHelper.CheckIfNameIsAllowed_PreviewTextInput;
+            FmpDt_TbDescription.PreviewTextInput += InputHelper.CheckIfTextIsAllowed_PreviewTextInput;
 
-        private void UcBehaviour_Loaded(object sender, RoutedEventArgs e)
-        {
 
-        }
+            FmpOv_TbNewProfileName.KeyUp += InputHelper.UpdateTextBinding;
 
-        private void LbSortingProfiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+            FmpDt_TbName.KeyUp += InputHelper.UpdateTextBinding;
+            FmpDt_TbDescription.KeyUp += InputHelper.UpdateTextBinding;
 
+
+            DataObject.AddPastingHandler(FmpOv_TbNewProfileName, InputHelper.OnPaste);
+
+            DataObject.AddPastingHandler(FmpDt_TbName, InputHelper.OnPaste);
+            DataObject.AddPastingHandler(FmpDt_TbDescription, InputHelper.OnPaste);
         }
     }
 }

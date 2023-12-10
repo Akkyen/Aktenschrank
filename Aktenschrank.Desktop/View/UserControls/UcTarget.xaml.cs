@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using Aktenschrank.Model;
+using Aktenschrank.Desktop.Utils;
 
 namespace Aktenschrank.Desktop.View.UserControls
 {
@@ -22,6 +23,10 @@ namespace Aktenschrank.Desktop.View.UserControls
         public UcTarget()
         {
             InitializeComponent();
+
+            TgDt_TbFolderPath.PreviewTextInput += InputHelper.CheckIfTextIsAllowed_PreviewTextInput;
+
+            DataObject.AddPastingHandler(TgDt_TbFolderPath, InputHelper.OnPaste);
         }
 
         public Target Target

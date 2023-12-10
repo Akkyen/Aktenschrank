@@ -1,8 +1,8 @@
 ﻿using Aktenschrank.Model.Enums;
 
-namespace Aktenschrank.Model;
+namespace Aktenschrank.Model.Statements;
 
-public class Action : Statement
+public class Action : AStatement
 {
     private ActionType _actionType;
 

@@ -2,6 +2,9 @@
 {
     public enum ActionType
     {
-
+        Move,
+        Copy,
+        Delete,
+        Rename,
     }
 }
